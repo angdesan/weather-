@@ -102,6 +102,14 @@ let loadWeekForecastData = () => {
 	
 }
 
+document.addEventListener("DOMContentLoaded", (event) => {
+    //Código a ejecutar
+    loadDayForecastData();
+});
+  
+let element = document.getElementById("loadinfo");
 
-loadDayForecastData();
-loadWeekForecastData();
+element.addEventListener('click', (event) => {
+    //Código a ejecutar
+    loadWeekForecastData();
+});
