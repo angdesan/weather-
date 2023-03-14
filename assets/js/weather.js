@@ -1,8 +1,8 @@
-import {weather_data} from './data.js';
+import { weather_data } from './data.js';
 
 
-let loadDayForecastData = (indice=0) => {
-	let id = "city";
+let loadDayForecastData = (indice = 0) => {
+    let id = "city";
     let city = document.getElementById(id);
     console.log(city);
     city.innerHTML = weather_data[indice].city;
@@ -39,12 +39,12 @@ let loadDayForecastData = (indice=0) => {
     late_icon.innerHTML = weather_data[indice].forecast_today[0].icon
 
     let idLate_temperature = 'late_temperature';
-    let late_temperature= document.getElementById(idLate_temperature);
+    let late_temperature = document.getElementById(idLate_temperature);
     late_temperature.innerHTML = weather_data[indice].forecast_today[0].temperature;
 
     let idLate_forecast = 'late_forecast';
     let late_forecast = document.getElementById(idLate_forecast);
-    late_forecast.innerHTML =  weather_data[indice].forecast_today[0].forecast;
+    late_forecast.innerHTML = weather_data[indice].forecast_today[0].forecast;
 
     let idLate_text = 'late_text';
     let late_text = document.getElementById(idLate_text);
@@ -57,57 +57,77 @@ let loadDayForecastData = (indice=0) => {
     night_icon.innerHTML = weather_data[indice].forecast_today[1].icon
 
     let idNight_temperature = 'night_temperature';
-    let night_temperature= document.getElementById(idNight_temperature);
+    let night_temperature = document.getElementById(idNight_temperature);
     night_temperature.innerHTML = weather_data[indice].forecast_today[1].temperature;
 
     let idNight_forecast = 'night_forecast';
     let night_forecast = document.getElementById(idNight_forecast);
-    night_forecast.innerHTML =  weather_data[indice].forecast_today[1].forecast;
+    night_forecast.innerHTML = weather_data[indice].forecast_today[1].forecast;
 
     let idNight_text = 'night_text';
     let night_text = document.getElementById(idNight_text);
     night_text.innerHTML = weather_data[indice].forecast_today[1].text;
 
-    
+
 
 
 
 
 }
 
-let loadWeekForecastData = () => {
-
+let loadWeekForecastData = (city) => {
     let classUse = "list-group";
-    console.log("hola",weather_data.forecast_week);
-    let {day,text,date,temperature,icon} = (weather_data[0].forecast_week)[0]
     let li_list_group = document.getElementsByClassName(classUse);
-    console.log(li_list_group);
+    
+    
+    for (let ciudadObj of weather_data) {
+        if (city === ciudadObj.city.toLowerCase()) {
+            if(li_list_group[0].id !== "init"){
+                li_list_group[0].innerHTML = "";
+                li_list_group[0].setAttribute('id',city);
+                for (let obj of ciudadObj.forecast_week) {
+                    let { day, text, date, temperature, icon } = obj;
+                    
+                    let message_template = `<li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg listaDelete">
+                    <div class="d-flex flex-column">
+                        <h6 class="mb-1 text-dark font-weight-bold text-sm">${text}</h6>
+                        <span class="text-xs">${date}</span>
+                    </div>
+                    <div class="d-flex align-items-center ">
+                        <span class="font-weight-bold text-dark mx-2">${temperature.max}</span> |  <span class="text-dark mx-2">${temperature.min}</span>
+                        <div class="ms-4"><i class="material-icons fs-2 me-1 rainy">${icon}</i></div>
+                    </div>
+                     </li>`
+                    li_list_group[0].innerHTML+=message_template;
+    
+                }
+            } 
+            else{
+                li_list_group[0].setAttribute('id',city);
+                for (let obj of ciudadObj.forecast_week) {
+                    let { day, text, date, temperature, icon } = obj;
+                    
+                    let message_template = `<li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg listaDelete">
+                    <div class="d-flex flex-column">
+                        <h6 class="mb-1 text-dark font-weight-bold text-sm">${text}</h6>
+                        <span class="text-xs">${date}</span>
+                    </div>
+                    <div class="d-flex align-items-center ">
+                        <span class="font-weight-bold text-dark mx-2">${temperature.max}</span> |  <span class="text-dark mx-2">${temperature.min}</span>
+                        <div class="ms-4"><i class="material-icons fs-2 me-1 rainy">${icon}</i></div>
+                    </div>
+                     </li>`
+                    li_list_group[0].innerHTML+=message_template;
+    
+                }
 
-    let message_template = `<li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-    <div class="d-flex flex-column">
-      <h6 class="mb-1 text-dark font-weight-bold text-sm">${text}</h6>
-      <span class="text-xs">${date}</span>
-    </div>
-    <div class="d-flex align-items-center ">
-      <span class="font-weight-bold text-dark mx-2">${temperature.max}</span> |  <span class="text-dark mx-2">${temperature.min}</span>
-      <div class="ms-4"><i class="material-icons fs-2 me-1 rainy">${icon}</i></div>
-    </div>
-  </li>`
-    li_list_group[0].innerHTML = message_template;
-    
-
-    
-    
-	
-	
+            }
+        }
+    }
 }
 
-/* document.addEventListener("DOMContentLoaded", (event) => {
-    //Código a ejecutar
-    loadDayForecastData();
-}); */
-  
-let selectList = () =>{
+
+let selectList = () => {
     let element = document.getElementById("dropdownMenuButton");
     let message = `<option value="" selected disabled hidden>Seleccione una ciudad</option>
     <option class="dropdown-item" value="guayaquil">Guayaquil</option>
@@ -118,20 +138,20 @@ let selectList = () =>{
 }
 selectList();
 
-  
+
 let elemento = document.getElementById("dropdownMenuButton");
 elemento.addEventListener('change', (event) => {
     //Código a ejecutar
-    //El event contiene la información del elemento seleccionado
-    let selectedValue = event.target.value 
-    if (selectedValue === "guayaquil"){
+    
+    let selectedValue = event.target.value
+    if (selectedValue === "guayaquil") {
         loadDayForecastData(0);
 
 
-    }else if (selectedValue ==="ambato"){
+    } else if (selectedValue === "ambato") {
         loadDayForecastData(1);
 
-    }else if (selectedValue === "tena"){
+    } else if (selectedValue === "tena") {
         loadDayForecastData(2);
 
     }
@@ -142,8 +162,17 @@ let element = document.getElementById("loadinfo");
 
 element.addEventListener('click', (event) => {
     //Código a ejecutar
-    loadWeekForecastData();
-    
+    let classUse = "list-group";
+    let li_list_group = document.getElementsByClassName(classUse);
+    console.log("lista: ",li_list_group[0]);
+    let element = document.getElementById("dropdownMenuButton");
+    let city = element.value;
+    console.log("id_lista: ",li_list_group[0].id);
+    if(!(li_list_group[0].id === city )){
+        console.log("ciudad: ",city);   
+        loadWeekForecastData(city);
+    }
+
 });
 
 
